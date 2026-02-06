@@ -195,10 +195,15 @@ export default function Home() {
       // Call agent using aiAgent.ts utility
       const result = await callAIAgent(textToSend, AGENT_ID, { session_id: sessionId })
 
-      console.log('Agent API Result:', result)
+      console.log('=== FULL Agent API Result ===')
+      console.log('Success:', result.success)
+      console.log('Response:', result.response)
+      console.log('Raw Response:', result.raw_response)
+      console.log('Error:', result.error)
+      console.log('=============================')
 
       if (result.success) {
-        let answer = 'No response available'
+        let answer = ''
         let relatedTopics: string[] = []
 
         // Try to extract structured response
@@ -208,32 +213,39 @@ export default function Home() {
         if (responseData.result?.answer) {
           answer = responseData.result.answer
           relatedTopics = responseData.result.related_topics || []
+          console.log('✓ Extracted from result.answer')
         }
         // Case 2: Response has text field
         else if (responseData.result?.text) {
           answer = responseData.result.text
+          console.log('✓ Extracted from result.text')
         }
         // Case 3: Response has message field
         else if (responseData.message) {
           answer = responseData.message
+          console.log('✓ Extracted from message')
         }
         // Case 4: Result is a string
         else if (typeof responseData.result === 'string') {
           answer = responseData.result
+          console.log('✓ Extracted from result (string)')
         }
-        // Case 5: Raw response might have the data
+        // Case 5: The entire result object might be the content
+        else if (responseData.result && typeof responseData.result === 'object') {
+          // Try to stringify the result if it's an object
+          answer = JSON.stringify(responseData.result, null, 2)
+          console.log('✓ Stringified result object')
+        }
+        // Case 6: Raw response as fallback
         else if (result.raw_response) {
-          try {
-            const rawParsed = JSON.parse(result.raw_response)
-            if (rawParsed.result?.answer) {
-              answer = rawParsed.result.answer
-              relatedTopics = rawParsed.result.related_topics || []
-            } else if (typeof rawParsed === 'string') {
-              answer = rawParsed
-            }
-          } catch {
-            answer = result.raw_response
-          }
+          answer = result.raw_response
+          console.log('✓ Using raw_response as fallback')
+        }
+
+        // Final fallback
+        if (!answer || answer.trim() === '') {
+          answer = 'I received your message but had trouble formatting the response. Please try again.'
+          console.warn('⚠ No answer extracted, using fallback')
         }
 
         const agentMessage: Message = {
@@ -245,6 +257,7 @@ export default function Home() {
 
         setMessages(prev => [...prev, agentMessage])
       } else {
+        console.error('❌ Agent call failed:', result.error)
         // Error handling
         const errorMessage: Message = {
           role: 'agent',
@@ -254,7 +267,7 @@ export default function Home() {
         setMessages(prev => [...prev, errorMessage])
       }
     } catch (error) {
-      console.error('Agent call error:', error)
+      console.error('❌ Agent call exception:', error)
       const errorMessage: Message = {
         role: 'agent',
         content: 'I apologize, but I encountered a network error. Please check your connection and try again.',

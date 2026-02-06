@@ -85,6 +85,20 @@ function normalizeResponse(parsed: any): NormalizedAgentResponse {
     }
   }
 
+  // Handle Lyzr's response wrapper format
+  if ('response' in parsed && typeof parsed.response === 'string') {
+    // The response might be JSON in a string, try to parse it
+    try {
+      const innerParsed = parseLLMJson(parsed.response)
+      if (innerParsed) {
+        return normalizeResponse(innerParsed)
+      }
+    } catch {
+      // If parsing fails, treat as text
+    }
+    return normalizeResponse(parsed.response)
+  }
+
   if ('response' in parsed) {
     return normalizeResponse(parsed.response)
   }
@@ -157,8 +171,18 @@ export async function POST(request: NextRequest) {
 
     const rawText = await response.text()
 
+    console.log('=== LYZR API Raw Response ===')
+    console.log('Status:', response.status)
+    console.log('Raw Text Length:', rawText.length)
+    console.log('Raw Text Preview:', rawText.substring(0, 500))
+    console.log('============================')
+
     if (response.ok) {
       const parsed = parseLLMJson(rawText)
+
+      console.log('=== Parsed Response ===')
+      console.log('Parsed:', JSON.stringify(parsed, null, 2))
+      console.log('=====================')
 
       if (parsed?.success === false && parsed?.error) {
         return NextResponse.json({
@@ -175,6 +199,7 @@ export async function POST(request: NextRequest) {
 
       // Check if the parsed response is already in the correct format
       if (parsed?.status && parsed?.result) {
+        console.log('✓ Response is already structured correctly')
         // Response is already structured correctly
         return NextResponse.json({
           success: true,
@@ -188,7 +213,12 @@ export async function POST(request: NextRequest) {
       }
 
       // Otherwise normalize the response
+      console.log('→ Normalizing response')
       const normalized = normalizeResponse(parsed)
+
+      console.log('=== Normalized Response ===')
+      console.log(JSON.stringify(normalized, null, 2))
+      console.log('=========================')
 
       return NextResponse.json({
         success: true,
