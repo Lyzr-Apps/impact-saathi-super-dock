@@ -1,0 +1,68 @@
+{
+  "agent_name": "Impact Saathi",
+  "agent_id": "6985a869b37fff3a03c07cca",
+  "agent_purpose": "Provide accurate, warm, and contextually rich answers about India AI Impact Summit 2026, IndiaAI Mission, and flagship initiatives",
+  "description": "Response schema for Impact Saathi agent with summit information, related topics, confidence level, sources, and language detection",
+  "response_schema": {
+    "status": "string",
+    "result": {
+      "answer": "string",
+      "related_topics": [
+        "string"
+      ],
+      "confidence": "string",
+      "sources": [
+        "string"
+      ]
+    },
+    "metadata": {
+      "agent_name": "string",
+      "timestamp": "string",
+      "language_detected": "string"
+    }
+  },
+  "example_response": {
+    "status": "success",
+    "result": {
+      "answer": "The IndiaAI Mission is a significant initiative orchestrated by the Ministry of Electronics and Information Technology (MeitY) of India, aimed at positioning India as a global hub for artificial intelligence (AI) innovation and application. This mission is aligned with three guiding Sutras: People, Planet, and Progress, and operates through seven key Chakras. These Chakras focus on areas such as Human Capital, Inclusion, Safe AI, Resilience, Science, Democratizing AI, and Economic Growth. \n\nWith a dedicated budget of Rs 10,371.92 crore, the mission seeks to enhance AI infrastructure and capabilities in India. This includes the development and deployment of AI in various sectors to drive economic growth, improve public services, foster inclusivity by bridging digital divides, and ensure ethical and safe use of AI technologies. \n\nKey flagship initiatives under the IndiaAI Mission include YUVAi, UDAAN, AI by HER, AI for ALL, and Tinkerpreneur. These programs are designed to empower different sections of society, promote AI literacy, and support entrepreneurship and innovation in the AI domain.",
+      "related_topics": [
+        "YUVAi initiative",
+        "AI by HER program",
+        "IndiaAI Mission budget allocation"
+      ],
+      "confidence": "high",
+      "sources": [
+        "global_context"
+      ]
+    },
+    "metadata": {
+      "agent_name": "Impact Saathi",
+      "timestamp": "2023-10-09T10:00:00Z",
+      "language_detected": "en"
+    }
+  },
+  "is_actual_tested": true,
+  "test_timestamp": "2026-02-06T08:39:43.199688",
+  "test_message_used": "Hello, provide a sample response",
+  "actual_test_response": {
+    "status": "success",
+    "result": {
+      "answer": "The IndiaAI Mission is a significant initiative orchestrated by the Ministry of Electronics and Information Technology (MeitY) of India, aimed at positioning India as a global hub for artificial intelligence (AI) innovation and application. This mission is aligned with three guiding Sutras: People, Planet, and Progress, and operates through seven key Chakras. These Chakras focus on areas such as Human Capital, Inclusion, Safe AI, Resilience, Science, Democratizing AI, and Economic Growth. \n\nWith a dedicated budget of Rs 10,371.92 crore, the mission seeks to enhance AI infrastructure and capabilities in India. This includes the development and deployment of AI in various sectors to drive economic growth, improve public services, foster inclusivity by bridging digital divides, and ensure ethical and safe use of AI technologies. \n\nKey flagship initiatives under the IndiaAI Mission include YUVAi, UDAAN, AI by HER, AI for ALL, and Tinkerpreneur. These programs are designed to empower different sections of society, promote AI literacy, and support entrepreneurship and innovation in the AI domain.",
+      "related_topics": [
+        "YUVAi initiative",
+        "AI by HER program",
+        "IndiaAI Mission budget allocation"
+      ],
+      "confidence": "high",
+      "sources": [
+        "global_context"
+      ]
+    },
+    "metadata": {
+      "agent_name": "Impact Saathi",
+      "timestamp": "2023-10-09T10:00:00Z",
+      "language_detected": "en"
+    }
+  },
+  "test_passed": true
+}

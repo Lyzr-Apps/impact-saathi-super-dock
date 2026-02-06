@@ -1,0 +1,38 @@
+{
+  "workflow_name": "Impact Saathi Summit Navigator",
+  "created_at": "2026-02-06T00:00:00Z",
+  "agents": {
+    "impact_saathi_agent": {
+      "agent_id": "6985a869b37fff3a03c07cca",
+      "name": "Impact Saathi",
+      "type": "Single",
+      "status": "active",
+      "has_knowledge_base": true,
+      "rag_id": "6985a84460cd1fd2d988d926",
+      "rag_name": "impactsaathisummitkbc7bl",
+      "provider": "OpenAI",
+      "model": "gpt-4o",
+      "temperature": 0.3,
+      "top_p": 0.9,
+      "features": [
+        "KNOWLEDGE_BASE",
+        "MEMORY",
+        "TOOL_CALLING"
+      ],
+      "tools": [
+        "perplexity_search"
+      ],
+      "crawl_status": "started",
+      "crawl_job_id": "crawl_9616704314_12030d43"
+    }
+  },
+  "knowledge_bases": {
+    "Impact_Saathi_Summit_KB": {
+      "rag_id": "6985a84460cd1fd2d988d926",
+      "rag_name": "impactsaathisummitkbc7bl",
+      "description": "Official government press releases, summit data (5-day schedule, 500+ sessions, 7 Chakras, 3 Sutras), IndiaAI ecosystem details",
+      "crawled_url": "https://impact.indiaai.gov.in/sessions",
+      "retrieval_mode": "MMR"
+    }
+  }
+}

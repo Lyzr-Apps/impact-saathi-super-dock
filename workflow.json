@@ -1,0 +1,51 @@
+{
+  "workflow_type": "single",
+  "workflow_name": "Impact Saathi Summit Navigator",
+  "description": "RAG-powered knowledge navigator for India AI Impact Summit 2026",
+  "nodes": [
+    {
+      "id": "input_node",
+      "type": "Input",
+      "label": "User Query",
+      "nodeCategory": "input"
+    },
+    {
+      "id": "impact_saathi_agent",
+      "type": "Agent",
+      "label": "Impact Saathi",
+      "nodeCategory": "agent",
+      "agent_id": "6985a869b37fff3a03c07cca",
+      "agent_name": "Impact Saathi"
+    },
+    {
+      "id": "output_node",
+      "type": "Output",
+      "label": "Response",
+      "nodeCategory": "end"
+    }
+  ],
+  "edges": [
+    {
+      "source": "input_node",
+      "target": "impact_saathi_agent"
+    },
+    {
+      "source": "impact_saathi_agent",
+      "target": "output_node"
+    }
+  ],
+  "agents": {
+    "impact_saathi_agent": {
+      "agent_id": "6985a869b37fff3a03c07cca",
+      "name": "Impact Saathi",
+      "type": "single",
+      "has_knowledge_base": true,
+      "rag_id": "6985a84460cd1fd2d988d926",
+      "rag_name": "impactsaathisummitkbc7bl",
+      "provider": "OpenAI",
+      "model": "gpt-4o",
+      "temperature": 0.3,
+      "top_p": 0.9
+    }
+  }
+}
