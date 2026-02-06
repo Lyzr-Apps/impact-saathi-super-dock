@@ -121,13 +121,7 @@ function ChatBubble({ message }: { message: Message }) {
             {message.suggestions.map((suggestion, idx) => (
               <button
                 key={idx}
-                onClick={() => {
-                  const input = document.querySelector('input[name="message"]') as HTMLInputElement
-                  if (input) {
-                    input.value = suggestion
-                    input.focus()
-                  }
-                }}
+                onClick={() => window.dispatchEvent(new CustomEvent('fill-suggestion', { detail: suggestion }))}
                 className="px-3 py-1 rounded-full border border-gray-300 text-xs font-medium text-gray-600 hover:bg-gray-50 hover:border-gray-400 transition-colors"
               >
                 {suggestion}
@@ -166,6 +160,7 @@ export default function Home() {
   const [inputValue, setInputValue] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const chatContainerRef = useRef<HTMLDivElement>(null)
+  const inputRef = useRef<HTMLInputElement>(null)
   const [sessionId] = useState(() => `session-${Date.now()}`)
 
   // Auto-scroll to latest message
@@ -175,10 +170,28 @@ export default function Home() {
     }
   }, [messages, isLoading])
 
+  // Handle suggestion chip clicks
+  useEffect(() => {
+    const handleFillSuggestion = (e: CustomEvent) => {
+      setInputValue(e.detail)
+      if (inputRef.current) {
+        inputRef.current.focus()
+      }
+    }
+
+    window.addEventListener('fill-suggestion' as any, handleFillSuggestion as any)
+    return () => {
+      window.removeEventListener('fill-suggestion' as any, handleFillSuggestion as any)
+    }
+  }, [])
+
   const handleSendMessage = async (messageText?: string) => {
     const textToSend = messageText || inputValue.trim()
 
     if (!textToSend || isLoading) return
+
+    // Clear input immediately
+    setInputValue('')
 
     // Add user message
     const userMessage: Message = {
@@ -188,7 +201,6 @@ export default function Home() {
     }
 
     setMessages(prev => [...prev, userMessage])
-    setInputValue('')
     setIsLoading(true)
 
     try {
@@ -353,6 +365,7 @@ export default function Home() {
         <div className="container mx-auto max-w-4xl px-4 py-3">
           <div className="flex gap-2 items-center">
             <Input
+              ref={inputRef}
               name="message"
               type="text"
               placeholder="Ask about the summit, speakers, schedule, or IndiaAI initiatives..."
@@ -360,7 +373,8 @@ export default function Home() {
               onChange={(e) => setInputValue(e.target.value)}
               onKeyPress={handleKeyPress}
               disabled={isLoading}
-              className="flex-1 h-12 px-4 border-2 border-gray-300 rounded-full focus:border-orange-400 focus:ring-orange-400"
+              autoComplete="off"
+              className="flex-1 h-12 px-4 border-2 border-gray-300 rounded-full focus:border-orange-400 focus:ring-orange-400 disabled:bg-gray-100"
             />
             <Button
               onClick={() => handleSendMessage()}
