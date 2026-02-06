@@ -195,18 +195,52 @@ export default function Home() {
       // Call agent using aiAgent.ts utility
       const result = await callAIAgent(textToSend, AGENT_ID, { session_id: sessionId })
 
-      if (result.success && result.response.status === 'success') {
-        const response = result.response as unknown as ImpactSaathiResponse
+      console.log('Agent API Result:', result)
 
-        // Extract answer and related topics from actual response structure
-        const answer = response.result?.answer || 'No response available'
-        const relatedTopics = response.result?.related_topics || []
+      if (result.success) {
+        let answer = 'No response available'
+        let relatedTopics: string[] = []
+
+        // Try to extract structured response
+        const responseData = result.response
+
+        // Case 1: Structured response with result.answer
+        if (responseData.result?.answer) {
+          answer = responseData.result.answer
+          relatedTopics = responseData.result.related_topics || []
+        }
+        // Case 2: Response has text field
+        else if (responseData.result?.text) {
+          answer = responseData.result.text
+        }
+        // Case 3: Response has message field
+        else if (responseData.message) {
+          answer = responseData.message
+        }
+        // Case 4: Result is a string
+        else if (typeof responseData.result === 'string') {
+          answer = responseData.result
+        }
+        // Case 5: Raw response might have the data
+        else if (result.raw_response) {
+          try {
+            const rawParsed = JSON.parse(result.raw_response)
+            if (rawParsed.result?.answer) {
+              answer = rawParsed.result.answer
+              relatedTopics = rawParsed.result.related_topics || []
+            } else if (typeof rawParsed === 'string') {
+              answer = rawParsed
+            }
+          } catch {
+            answer = result.raw_response
+          }
+        }
 
         const agentMessage: Message = {
           role: 'agent',
           content: answer,
           timestamp: new Date(),
-          suggestions: relatedTopics
+          suggestions: relatedTopics.length > 0 ? relatedTopics : undefined
         }
 
         setMessages(prev => [...prev, agentMessage])
@@ -214,12 +248,13 @@ export default function Home() {
         // Error handling
         const errorMessage: Message = {
           role: 'agent',
-          content: 'I apologize, but I encountered an error processing your request. Please try again.',
+          content: result.error || 'I apologize, but I encountered an error processing your request. Please try again.',
           timestamp: new Date()
         }
         setMessages(prev => [...prev, errorMessage])
       }
     } catch (error) {
+      console.error('Agent call error:', error)
       const errorMessage: Message = {
         role: 'agent',
         content: 'I apologize, but I encountered a network error. Please check your connection and try again.',

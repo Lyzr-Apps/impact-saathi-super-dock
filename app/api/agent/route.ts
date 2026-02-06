@@ -173,6 +173,21 @@ export async function POST(request: NextRequest) {
         })
       }
 
+      // Check if the parsed response is already in the correct format
+      if (parsed?.status && parsed?.result) {
+        // Response is already structured correctly
+        return NextResponse.json({
+          success: true,
+          response: parsed,
+          agent_id,
+          user_id: finalUserId,
+          session_id: finalSessionId,
+          timestamp: new Date().toISOString(),
+          raw_response: rawText,
+        })
+      }
+
+      // Otherwise normalize the response
       const normalized = normalizeResponse(parsed)
 
       return NextResponse.json({
