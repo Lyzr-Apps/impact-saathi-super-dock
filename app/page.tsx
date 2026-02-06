@@ -306,10 +306,7 @@ export default function Home() {
     <div className="flex flex-col h-screen bg-white">
       {/* Fixed Header - 80px */}
       <header
-        className="fixed top-0 left-0 right-0 h-20 bg-gradient-to-r from-orange-50 via-white to-blue-50 border-b border-gray-200 shadow-sm z-10"
-        style={{
-          backgroundImage: 'linear-gradient(to right, rgba(255, 153, 51, 0.05), rgba(0, 0, 128, 0.05))'
-        }}
+        className="fixed top-0 left-0 right-0 h-20 bg-white border-b border-gray-200 shadow-md z-10"
       >
         <div className="container mx-auto h-full px-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
