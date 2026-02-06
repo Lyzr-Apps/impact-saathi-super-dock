@@ -49,12 +49,9 @@ function WelcomeCard({ onQuickStart }: { onQuickStart: (query: string) => void }
   return (
     <Card className="max-w-2xl mx-auto shadow-lg border-2 border-orange-100">
       <CardHeader className="text-center pb-4">
-        <div className="flex items-center justify-center gap-2 mb-2">
-          <span className="text-3xl">🙏</span>
-          <CardTitle className="text-2xl font-bold text-navy-900">
-            Namaste! Welcome to Impact Saathi
-          </CardTitle>
-        </div>
+        <CardTitle className="text-2xl font-bold text-navy-900 mb-2">
+          Namaste! Welcome to Impact Saathi
+        </CardTitle>
         <div className="flex items-center justify-center gap-2 text-gray-600">
           <BiFlag className="text-orange-500" />
           <p className="text-sm">Your AI Navigator for the India AI Impact Summit 2026</p>
@@ -170,20 +167,19 @@ export default function Home() {
     }
   }, [messages, isLoading])
 
-  // Handle suggestion chip clicks
+  // Handle suggestion chip clicks - directly submit
   useEffect(() => {
     const handleFillSuggestion = (e: CustomEvent) => {
-      setInputValue(e.detail)
-      if (inputRef.current) {
-        inputRef.current.focus()
-      }
+      const suggestionText = e.detail
+      // Directly send the message instead of filling the input
+      handleSendMessage(suggestionText)
     }
 
     window.addEventListener('fill-suggestion' as any, handleFillSuggestion as any)
     return () => {
       window.removeEventListener('fill-suggestion' as any, handleFillSuggestion as any)
     }
-  }, [])
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleSendMessage = async (messageText?: string) => {
     const textToSend = messageText || inputValue.trim()
