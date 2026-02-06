@@ -1,5 +1,3 @@
-'use client'
-
 /**
  * AI Agent Client Utility
  *
@@ -16,8 +14,6 @@
  * }
  * ```
  */
-
-import { useState } from 'react'
 
 // Types
 export interface NormalizedAgentResponse {
@@ -148,77 +144,6 @@ export async function uploadFiles(files: File | File[]): Promise<UploadResponse>
   }
 }
 
-/**
- * React hook for using AI Agent in components
- */
-export function useAIAgent() {
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-  const [response, setResponse] = useState<NormalizedAgentResponse | null>(null)
-
-  const callAgent = async (
-    message: string,
-    agent_id: string,
-    options?: { user_id?: string; session_id?: string; assets?: string[] }
-  ) => {
-    setLoading(true)
-    setError(null)
-    setResponse(null)
-
-    const result = await callAIAgent(message, agent_id, options)
-
-    if (result.success) {
-      setResponse(result.response)
-    } else {
-      setError(result.error || 'Unknown error')
-      setResponse(result.response)
-    }
-
-    setLoading(false)
-    return result
-  }
-
-  return {
-    callAgent,
-    loading,
-    error,
-    response,
-  }
-}
-
-/**
- * React hook for file uploads
- */
-export function useFileUpload() {
-  const [uploading, setUploading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-  const [result, setResult] = useState<UploadResponse | null>(null)
-
-  const upload = async (files: File | File[]) => {
-    setUploading(true)
-    setError(null)
-    setResult(null)
-
-    const uploadResult = await uploadFiles(files)
-
-    if (uploadResult.success) {
-      setResult(uploadResult)
-    } else {
-      setError(uploadResult.error || 'Upload failed')
-      setResult(uploadResult)
-    }
-
-    setUploading(false)
-    return uploadResult
-  }
-
-  return {
-    upload,
-    uploading,
-    error,
-    result,
-  }
-}
 
 /**
  * Extract text from agent response
